@@ -66,7 +66,7 @@ Telegram-канал, Telegram-бот, мини-апп в Telegram, веб-при
 
 Не входит в версию 1: сайт, проверка эссе и другие разовые услуги, трекер заявок.
 
-Источники возможностей: [docs/sources.md](docs/sources.md).
+Источники возможностей: [docs/sources.md](docs/sources.md). Сборщик: [collector/](collector/README.md).
 
 ## Стек
 
