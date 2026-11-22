@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { providersFromEnv } from "./ai/providers.js";
 import { Router } from "./ai/router.js";
 import { run } from "./pipeline.js";
-import { deliver } from "./sink.js";
+import { deliver, reportUsage } from "./sink.js";
 import { SOURCES } from "./sources.js";
 import { loadState, saveState } from "./state.js";
 
@@ -40,13 +40,20 @@ await mkdir(outDir, { recursive: true });
 if (result.pending.length) {
   await writeFile(join(outDir, `pending-${runId}.json`), JSON.stringify(result.pending, null, 2));
 }
+const aiUsage = Object.fromEntries(router?.usage ?? []);
+try {
+  await reportUsage(now.toISOString().slice(0, 10), aiUsage, { apiUrl: env.GRANTCHI_API_URL, secret: env.GRANTCHI_INGEST_SECRET });
+} catch (e) {
+  // Usage stats are informational; a failed report must not fail the run.
+  console.log((e as Error).message);
+}
 const summary = {
   runId,
   day: now.toISOString().slice(0, 10),
   stats: result.stats,
   pending: result.pending.length,
   sourceErrors: result.sourceErrors,
-  aiUsage: Object.fromEntries(router?.usage ?? []),
+  aiUsage,
 };
 await writeFile(join(outDir, `summary-${runId}.json`), JSON.stringify(summary, null, 2));
 console.log(JSON.stringify(summary, null, 2));

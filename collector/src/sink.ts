@@ -32,3 +32,20 @@ export async function deliver(
   await writeFile(file, JSON.stringify(drafts, null, 2));
   return `wrote ${drafts.length} drafts to ${file}`;
 }
+
+/** Adds this run's AI usage to the (provider, day) rows in D1. Skipped without the Worker. */
+export async function reportUsage(
+  day: string,
+  usage: Record<string, { requests: number; failures: number; rateLimited: number }>,
+  opts: { apiUrl?: string; secret?: string; fetchImpl?: FetchLike },
+): Promise<boolean> {
+  if (!opts.apiUrl || !opts.secret || Object.keys(usage).length === 0) return false;
+  const res = await (opts.fetchImpl ?? fetch)(`${opts.apiUrl.replace(/\/$/, "")}/api/internal/ai-usage`, {
+    method: "POST",
+    headers: { "content-type": "application/json", authorization: `Bearer ${opts.secret}` },
+    body: JSON.stringify({ day, usage }),
+    signal: AbortSignal.timeout(30_000),
+  });
+  if (!res.ok) throw new Error(`usage report failed: HTTP ${res.status}`);
+  return true;
+}

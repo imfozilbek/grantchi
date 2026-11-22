@@ -74,8 +74,8 @@ Telegram-канал, Telegram-бот, мини-апп в Telegram, веб-при
 
 | Часть | Сервис |
 | --- | --- |
-| Mini App, админка (`/admin`) и API (`/api/*`) | один проект Cloudflare Pages + Functions, один адрес grantchi.uz, без CORS |
-| Telegram-бот (webhook) | тот же Worker/Functions |
+| Mini App, админка (`/admin`) и API (`/api/*`) | один Cloudflare Worker со статическими файлами ([worker/](worker/README.md)), один адрес grantchi.uz, без CORS |
+| Telegram-бот (webhook) | тот же Worker |
 | База данных | Cloudflare D1 |
 | Файлы | Cloudflare R2, закрытый бакет, выдача только через Worker после проверки прав |
 | Расписание | ровно 1 cron в Cloudflare; задачи выбираются по времени внутри `scheduled()` |

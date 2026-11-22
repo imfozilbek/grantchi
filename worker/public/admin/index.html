@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grantchi — moderatsiya</title>
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+  <header>
+    <h1>Grantchi moderatsiya</h1>
+    <span id="me"></span>
+  </header>
+  <nav id="tabs">
+    <button data-status="draft" class="active">Qoralamalar</button>
+    <button data-status="approved">Tasdiqlangan</button>
+    <button data-status="rejected">Rad etilgan</button>
+    <button data-status="expired">Muddati o'tgan</button>
+  </nav>
+  <main id="list"></main>
+  <p id="empty" hidden>Hozircha hech narsa yo'q.</p>
+  <button id="more" hidden>Yana yuklash</button>
+  <p id="msg" role="status"></p>
+
+  <template id="item">
+    <article class="item">
+      <div class="meta"></div>
+      <div class="flags"></div>
+      <form>
+        <label>Sarlavha <input name="title_uz" required></label>
+        <label>Qisqacha <textarea name="summary_uz" rows="3"></textarea></label>
+        <div class="row">
+          <label>Turi <select name="type"></select></label>
+          <label>Muddat <input name="deadline" type="date"></label>
+          <label>Kimlar uchun <select name="eligibility">
+            <option value="all">Hamma</option>
+            <option value="uzbekistan_eligible">O'zbekiston fuqarolari mumkin</option>
+            <option value="not_eligible">O'zbekiston fuqarolari mumkin emas</option>
+            <option value="unknown">Noma'lum</option>
+          </select></label>
+          <label>Moliyalash <select name="funding">
+            <option value="full">To'liq</option>
+            <option value="partial">Qisman</option>
+            <option value="none">Yo'q</option>
+            <option value="unknown">Noma'lum</option>
+          </select></label>
+        </div>
+        <label>Talablar (har biri yangi qatorda) <textarea name="requirements_uz" rows="3"></textarea></label>
+        <label>Hujjatlar (har biri yangi qatorda) <textarea name="documents_uz" rows="3"></textarea></label>
+        <label>Rasmiy havola <input name="official_url" type="url"></label>
+        <div class="actions">
+          <button type="submit" name="action" value="approve" class="approve">Tasdiqlash</button>
+          <button type="submit" name="action" value="reject" class="reject">Rad etish</button>
+        </div>
+      </form>
+    </article>
+  </template>
+
+  <script type="module" src="/admin/admin.js"></script>
+</body>
+</html>

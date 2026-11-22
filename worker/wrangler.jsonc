@@ -1,0 +1,37 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "grantchi",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-01",
+
+  // Only reachable through grantchi.uz, never *.workers.dev or preview URLs.
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [{ "pattern": "grantchi.uz", "custom_domain": true }],
+
+  // Static files (Mini App, /admin) are served without invoking the Worker,
+  // so they do not count against the 5000 requests/day budget.
+  "assets": { "directory": "./public" },
+
+  // The one cron of this project. Tasks branch on time inside scheduled().
+  "triggers": { "crons": ["*/10 * * * *"] },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "grantchi",
+      // Replace with the id from `wrangler d1 create grantchi` before the first deploy.
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+
+  "observability": { "enabled": true, "head_sampling_rate": 0.2 },
+
+  "vars": {
+    // Cloudflare Access protecting /admin and /api/admin/*: team name (<team>.cloudflareaccess.com) and application AUD tag.
+    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_AUD": ""
+  }
+  // Secret: INGEST_SECRET (wrangler secret put INGEST_SECRET), shared with the collector as GRANTCHI_INGEST_SECRET.
+}
